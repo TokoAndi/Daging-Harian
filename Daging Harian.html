@@ -122,7 +122,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Template Pembelian Daging Harian</h1>
+      <h1>Template Pembelian Daging Harian @ANDI</h1>
       <p class="lead">
         Masukkan harga per kilo (Rp/kg) dan jumlah kilo yang dibeli. Sistem akan
         menghitung otomatis sesuai harga x kilo.
@@ -176,22 +176,22 @@
         <div class="card">
           <h3 style="margin: 0 0 8px">Jumlah kilo dibeli</h3>
           <label for="qty_daging">Jumlah daging (kg)</label>
-          <input id="qty_daging" type="number" min="0" step="0.01" value="0" />
+          <input id="qty_daging" type="number" min="0" step="0.01" value="" />
 
           <label for="qty_hati" style="margin-top: 8px">Jumlah hati (kg)</label>
-          <input id="qty_hati" type="number" min="0" step="0.01" value="0" />
+          <input id="qty_hati" type="number" min="0" step="0.01" value="" />
 
           <label for="qty_usus" style="margin-top: 8px">Jumlah usus (kg)</label>
-          <input id="qty_usus" type="number" min="0" step="0.01" value="0" />
+          <input id="qty_usus" type="number" min="0" step="0.01" value="" />
 
           <label for="qty_kepala" style="margin-top: 8px"
             >Jumlah kepala & cakar (kg)</label
           >
-          <input id="qty_kepala" type="number" min="0" step="0.01" value="0" />
+          <input id="qty_kepala" type="number" min="0" step="0.01" value="" />
           <label for="kekurangan" style="margin-top: 8px"
             >Kekurangan (x1000)</label
           >
-          <input id="kekurangan" type="number" min="0" step="1" value="0" />
+          <input id="kekurangan" type="number" min="0" step="1" value="" />
         </div>
       </div>
 
@@ -309,14 +309,28 @@
       el("download").addEventListener("click", () => {
         const res = calculate();
         const lines = [];
-        lines.push("NOTA PEMBELIAN DAGING HARIAN");
-        lines.push("-------------------------------");
-        res.breakdown.forEach((b) => {
-          lines.push(`${b.label} -> ${b.value}`);
-        });
-        lines.push("-------------------------------");
-        lines.push(`TOTAL -> ${res.total}`);
 
+        // Header nota
+        lines.push("=".repeat(40));
+        lines.push("       🧾 NOTA PEMBELIAN DAGING HARIAN");
+        lines.push("=".repeat(40));
+        lines.push("");
+
+        // Isi breakdown
+        res.breakdown.forEach((b) => {
+          const label = b.label.replace(/\(x1000\)/g, "").trim();
+          const val = formatRp(b.value).padStart(15);
+          lines.push(label.padEnd(40 - val.length, ".") + val);
+        });
+
+        lines.push("-".repeat(40));
+        lines.push(`TOTAL`.padEnd(25, " ") + formatRp(res.total).padStart(15));
+        lines.push("=".repeat(40));
+        lines.push(`Tanggal: ${new Date().toLocaleDateString("id-ID")}`);
+        lines.push("Terima kasih sudah bertransaksi 🤝");
+        lines.push("=".repeat(40));
+
+        // Download file
         const blob = new Blob([lines.join("\n")], {
           type: "text/plain;charset=utf-8",
         });
