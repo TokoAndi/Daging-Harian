@@ -1,174 +1,345 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
+<!DOCTYPE html>
 
 <html lang="id">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Template Pembelian Daging Harian</title>
-  <style>
-    :root{--accent:#e53e3e;--muted:#6b7280;--bg:#f7fafc}
-    *{box-sizing:border-box}
-    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:#0f172a; margin:0; padding:24px}
-    .container{max-width:920px;margin:0 auto;background:#fff;border-radius:12px;padding:20px;box-shadow:0 6px 24px rgba(2,6,23,0.08)}
-    h1{font-size:20px;margin:0 0 8px}
-    p.lead{margin:0 0 18px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type="number"], input[type="text"]{width:100%;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px}
-    .card{background:#fbfdff;padding:12px;border-radius:10px;border:1px solid #eef2f7}
-    .row{display:flex;gap:8px;align-items:center}
-    .actions{display:flex;gap:8px;margin-top:12px}
-    button{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
-    button.secondary{background:#0ea5a4}
-    .result{margin-top:16px;padding:12px;border-radius:10px;background:#fff8f8;border:1px solid #ffecee}
-    .breakdown{margin-top:8px}
-    .line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #f1eaea}
-    .line:last-child{border-bottom:0}
-    .total{font-weight:700;font-size:18px;margin-top:10px}
-    footer{margin-top:18px;color:var(--muted);font-size:13px}
-    @media (max-width:720px){.grid{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Template Pembelian Daging Harian</h1>
-    <p class="lead">Masukkan harga per kilo (Rp/kg) dan jumlah kilo yang dibeli. Sistem akan menghitung otomatis sesuai harga x kilo.</p><div class="grid">
-  <div class="card">
-    <h3 style="margin:0 0 8px">Harga per kilo</h3>
-    <label for="harga_daging">Harga daging (Rp / kg)</label>
-    <input id="harga_daging" type="number" min="0" step="100" value="42000">
-
-    <label for="harga_hati" style="margin-top:8px">Harga hati (Rp / kg)</label>
-    <input id="harga_hati" type="number" min="0" step="100" value="20000">
-
-    <label for="harga_usus" style="margin-top:8px">Harga usus (Rp / kg)</label>
-    <input id="harga_usus" type="number" min="0" step="100" value="15000">
-
-    <label for="harga_kepala" style="margin-top:8px">Harga kepala & cakar (Rp / kg)</label>
-    <input id="harga_kepala" type="number" min="0" step="100" value="17000">
-  </div>
-
-  <div class="card">
-    <h3 style="margin:0 0 8px">Jumlah kilo dibeli</h3>
-    <label for="qty_daging">Jumlah daging (kg)</label>
-    <input id="qty_daging" type="number" min="0" step="0.01" value="0">
-
-    <label for="qty_hati" style="margin-top:8px">Jumlah hati (kg)</label>
-    <input id="qty_hati" type="number" min="0" step="0.01" value="0">
-
-    <label for="qty_usus" style="margin-top:8px">Jumlah usus (kg)</label>
-    <input id="qty_usus" type="number" min="0" step="0.01" value="0">
-
-    <label for="qty_kepala" style="margin-top:8px">Jumlah kepala & cakar (kg)</label>
-    <input id="qty_kepala" type="number" min="0" step="0.01" value="0">
-  </div>
-</div>
-
-<div style="margin-top:12px" class="card">
-  <p style="margin:6px 0 0;color:var(--muted);font-size:13px">Iuran Arisan harian Rp 200.000 (tetap)</p>
-  <div class="actions">
-    <button id="hitung">Hitung Total</button>
-    <button id="reset" class="secondary" type="button">Reset</button>
-    <button id="download" class="secondary" type="button">Unduh Nota</button>
-  </div>
-
-  <div id="result" class="result" aria-live="polite" style="display:none">
-    <div id="breakdown" class="breakdown"></div>
-    <div class="total" id="totalRp"></div>
-  </div>
-</div>
-
-<footer>Template sederhana untuk menghitung pembelian daging harian sesuai harga per kilo x jumlah kilo.</footer>
-
-  </div>  <script>
-    const el = (id)=>document.getElementById(id)
-    const formatRp = (num)=>{
-      const v = Number(num) || 0
-      return 'Rp ' + v.toLocaleString('id-ID')
-    }
-
-    function calculate(){
-      const harga_daging = parseFloat(el('harga_daging').value) || 0
-      const harga_hati = parseFloat(el('harga_hati').value) || 0
-      const harga_usus = parseFloat(el('harga_usus').value) || 0
-      const harga_kepala = parseFloat(el('harga_kepala').value) || 0
-
-      const qty_daging = parseFloat(el('qty_daging').value) || 0
-      const qty_hati = parseFloat(el('qty_hati').value) || 0
-      const qty_usus = parseFloat(el('qty_usus').value) || 0
-      const qty_kepala = parseFloat(el('qty_kepala').value) || 0
-
-      const subtotal_daging = harga_daging * qty_daging
-      const subtotal_hati = harga_hati * qty_hati
-      const subtotal_usus = harga_usus * qty_usus
-      const subtotal_kepala = harga_kepala * qty_kepala
-      const subtotal_arisan = 200000 // tetap 200 ribu
-
-      const total = subtotal_daging + subtotal_hati + subtotal_usus + subtotal_kepala + subtotal_arisan
-
-      const breakdown = [
-        {label: `Daging (${qty_daging} kg x Rp ${harga_daging}/kg)`, value: subtotal_daging},
-        {label: `Hati (${qty_hati} kg x Rp ${harga_hati}/kg)`, value: subtotal_hati},
-        {label: `Usus (${qty_usus} kg x Rp ${harga_usus}/kg)`, value: subtotal_usus},
-        {label: `Kepala & Cakar (${qty_kepala} kg x Rp ${harga_kepala}/kg)`, value: subtotal_kepala},
-        {label: `Iuran Arisan (Rp 200.000 tetap)`, value: subtotal_arisan}
-      ]
-
-      const bd = el('breakdown')
-      bd.innerHTML = ''
-      breakdown.forEach(item=>{
-        const div = document.createElement('div')
-        div.className = 'line'
-        div.innerHTML = `<div style="color:var(--muted);font-size:13px">${item.label}</div><div>${formatRp(item.value)}</div>`
-        bd.appendChild(div)
-      })
-
-      el('totalRp').textContent = `TOTAL: ${formatRp(total)}`
-      el('result').style.display = 'block'
-
-      return {breakdown, total}
-    }
-
-    el('hitung').addEventListener('click', ()=>{
-      calculate()
-    })
-
-    el('reset').addEventListener('click', ()=>{
-      document.querySelectorAll('input').forEach(i=>{
-        if(i.type==='number'){
-          i.value = (i.id==='iuran')?1:0
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Template Pembelian Daging Harian</title>
+    <style>
+      :root {
+        --accent: #e53e3e;
+        --muted: #6b7280;
+        --bg: #f7fafc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: var(--bg);
+        color: #0f172a;
+        margin: 0;
+        padding: 24px;
+      }
+      .container {
+        max-width: 920px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 24px rgba(2, 6, 23, 0.08);
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 8px;
+      }
+      p.lead {
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e6e9ef;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .card {
+        background: #fbfdff;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #eef2f7;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      button {
+        background: var(--accent);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 0;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: #0ea5a4;
+      }
+      .result {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fff8f8;
+        border: 1px solid #ffecee;
+      }
+      .breakdown {
+        margin-top: 8px;
+      }
+      .line {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px dashed #f1eaea;
+      }
+      .line:last-child {
+        border-bottom: 0;
+      }
+      .total {
+        font-weight: 700;
+        font-size: 18px;
+        margin-top: 10px;
+      }
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
         }
-      })
-      el('result').style.display = 'none'
-    })
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Template Pembelian Daging Harian</h1>
+      <p class="lead">
+        Masukkan harga per kilo (Rp/kg) dan jumlah kilo yang dibeli. Sistem akan
+        menghitung otomatis sesuai harga x kilo.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin: 0 0 8px">Harga per kilo</h3>
+          <label for="harga_daging">Harga daging (Rp / kg)</label>
+          <input
+            id="harga_daging"
+            type="number"
+            min="0"
+            step="100"
+            value="42000"
+          />
 
-    el('download').addEventListener('click', ()=>{
-      const res = calculate()
-      const lines = []
-      lines.push('NOTA PEMBELIAN DAGING HARIAN')
-      lines.push('-------------------------------')
-      res.breakdown.forEach(b=>{
-        lines.push(`${b.label} -> ${b.value}`)
-      })
-      lines.push('-------------------------------')
-      lines.push(`TOTAL -> ${res.total}`)
+          <label for="harga_hati" style="margin-top: 8px"
+            >Harga hati (Rp / kg)</label
+          >
+          <input
+            id="harga_hati"
+            type="number"
+            min="0"
+            step="100"
+            value="20000"
+          />
 
-      const blob = new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'})
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `nota-pembelian-daging-${new Date().toISOString().slice(0,10)}.txt`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(url)
-    })
+          <label for="harga_usus" style="margin-top: 8px"
+            >Harga usus (Rp / kg)</label
+          >
+          <input
+            id="harga_usus"
+            type="number"
+            min="0"
+            step="100"
+            value="15000"
+          />
 
-    document.querySelectorAll('input').forEach(inp=>{
-      inp.addEventListener('input', ()=>{
-        const any = Array.from(document.querySelectorAll('input')).some(i=>Number(i.value) !== 0)
-        if(any) calculate()
-      })
-    })
-  </script></body>
+          <label for="harga_kepala" style="margin-top: 8px"
+            >Harga kepala & cakar (Rp / kg)</label
+          >
+          <input
+            id="harga_kepala"
+            type="number"
+            min="0"
+            step="100"
+            value="17000"
+          />
+        </div>
+
+        <div class="card">
+          <h3 style="margin: 0 0 8px">Jumlah kilo dibeli</h3>
+          <label for="qty_daging">Jumlah daging (kg)</label>
+          <input id="qty_daging" type="number" min="0" step="0.01" value="0" />
+
+          <label for="qty_hati" style="margin-top: 8px">Jumlah hati (kg)</label>
+          <input id="qty_hati" type="number" min="0" step="0.01" value="0" />
+
+          <label for="qty_usus" style="margin-top: 8px">Jumlah usus (kg)</label>
+          <input id="qty_usus" type="number" min="0" step="0.01" value="0" />
+
+          <label for="qty_kepala" style="margin-top: 8px"
+            >Jumlah kepala & cakar (kg)</label
+          >
+          <input id="qty_kepala" type="number" min="0" step="0.01" value="0" />
+          <label for="kekurangan" style="margin-top: 8px"
+            >Kekurangan (x1000)</label
+          >
+          <input id="kekurangan" type="number" min="0" step="1" value="0" />
+        </div>
+      </div>
+
+      <div style="margin-top: 12px" class="card">
+        <p style="margin: 6px 0 0; color: var(--muted); font-size: 13px">
+          Iuran Arisan harian Rp 200.000 (tetap)
+        </p>
+        <div class="actions">
+          <button id="hitung">Hitung Total</button>
+          <button id="reset" class="secondary" type="button">Reset</button>
+          <button id="download" class="secondary" type="button">
+            Unduh Nota
+          </button>
+        </div>
+
+        <div
+          id="result"
+          class="result"
+          aria-live="polite"
+          style="display: none"
+        >
+          <div id="breakdown" class="breakdown"></div>
+          <div class="total" id="totalRp"></div>
+        </div>
+      </div>
+
+      <footer>
+        Template sederhana untuk menghitung pembelian daging harian sesuai harga
+        per kilo x jumlah kilo.
+      </footer>
+    </div>
+    <script>
+      const el = (id) => document.getElementById(id);
+      const formatRp = (num) => {
+        const v = Number(num) || 0;
+        return "Rp " + v.toLocaleString("id-ID");
+      };
+
+      function calculate() {
+        const harga_daging = parseFloat(el("harga_daging").value) || 0;
+        const harga_hati = parseFloat(el("harga_hati").value) || 0;
+        const harga_usus = parseFloat(el("harga_usus").value) || 0;
+        const harga_kepala = parseFloat(el("harga_kepala").value) || 0;
+
+        const qty_daging = parseFloat(el("qty_daging").value) || 0;
+        const qty_hati = parseFloat(el("qty_hati").value) || 0;
+        const qty_usus = parseFloat(el("qty_usus").value) || 0;
+        const qty_kepala = parseFloat(el("qty_kepala").value) || 0;
+        const kekurangan = (parseFloat(el("kekurangan").value) || 0) * 1000;
+
+        const subtotal_daging = harga_daging * qty_daging;
+        const subtotal_hati = harga_hati * qty_hati;
+        const subtotal_usus = harga_usus * qty_usus;
+        const subtotal_kepala = harga_kepala * qty_kepala;
+        const subtotal_arisan = 200000; // tetap 200 ribu
+
+        const total =
+          subtotal_daging +
+          subtotal_hati +
+          subtotal_usus +
+          subtotal_kepala +
+          subtotal_arisan +
+          kekurangan;
+
+        const breakdown = [
+          {
+            label: `Daging (${qty_daging} kg x Rp ${harga_daging}/kg)`,
+            value: subtotal_daging,
+          },
+          {
+            label: `Hati (${qty_hati} kg x Rp ${harga_hati}/kg)`,
+            value: subtotal_hati,
+          },
+          {
+            label: `Usus (${qty_usus} kg x Rp ${harga_usus}/kg)`,
+            value: subtotal_usus,
+          },
+          {
+            label: `Kepala & Cakar (${qty_kepala} kg x Rp ${harga_kepala}/kg)`,
+            value: subtotal_kepala,
+          },
+          { label: `Iuran Arisan (Rp 200.000 tetap)`, value: subtotal_arisan },
+          { label: `Kekurangan (x1000)`, value: kekurangan },
+        ];
+
+        const bd = el("breakdown");
+        bd.innerHTML = "";
+        breakdown.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "line";
+          div.innerHTML = `<div style="color:var(--muted);font-size:13px">${
+            item.label
+          }</div><div>${formatRp(item.value)}</div>`;
+          bd.appendChild(div);
+        });
+
+        el("totalRp").textContent = `TOTAL: ${formatRp(total)}`;
+        el("result").style.display = "block";
+
+        return { breakdown, total };
+      }
+
+      el("hitung").addEventListener("click", () => {
+        calculate();
+      });
+
+      el("reset").addEventListener("click", () => {
+        document.querySelectorAll("input").forEach((i) => {
+          if (i.type === "number") {
+          }
+        });
+        el("result").style.display = "none";
+      });
+
+      el("download").addEventListener("click", () => {
+        const res = calculate();
+        const lines = [];
+        lines.push("NOTA PEMBELIAN DAGING HARIAN");
+        lines.push("-------------------------------");
+        res.breakdown.forEach((b) => {
+          lines.push(`${b.label} -> ${b.value}`);
+        });
+        lines.push("-------------------------------");
+        lines.push(`TOTAL -> ${res.total}`);
+
+        const blob = new Blob([lines.join("\n")], {
+          type: "text/plain;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `nota-pembelian-daging-${new Date()
+          .toISOString()
+          .slice(0, 10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      document.querySelectorAll("input").forEach((inp) => {
+        inp.addEventListener("input", () => {
+          const any = Array.from(document.querySelectorAll("input")).some(
+            (i) => Number(i.value) !== 0
+          );
+          if (any) calculate();
+        });
+      });
+    </script>
+  </body>
 </html>
