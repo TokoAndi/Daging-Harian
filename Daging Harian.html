@@ -1,359 +1,563 @@
 <!DOCTYPE html>
-
 <html lang="id">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Template Pembelian Daging Harian</title>
-    <style>
-      :root {
-        --accent: #e53e3e;
-        --muted: #6b7280;
-        --bg: #f7fafc;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial;
-        background: var(--bg);
-        color: #0f172a;
-        margin: 0;
-        padding: 24px;
-      }
-      .container {
-        max-width: 920px;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 6px 24px rgba(2, 6, 23, 0.08);
-      }
-      h1 {
-        font-size: 20px;
-        margin: 0 0 8px;
-      }
-      p.lead {
-        margin: 0 0 18px;
-        color: var(--muted);
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      label {
-        display: block;
-        font-size: 13px;
-        color: var(--muted);
-        margin-bottom: 6px;
-      }
-      input[type="number"],
-      input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #e6e9ef;
-        border-radius: 8px;
-        font-size: 14px;
-      }
-      .card {
-        background: #fbfdff;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #eef2f7;
-      }
-      .row {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
-      .actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
-      }
-      button {
-        background: var(--accent);
-        color: #fff;
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 0;
-        cursor: pointer;
-      }
-      button.secondary {
-        background: #0ea5a4;
-      }
-      .result {
-        margin-top: 16px;
-        padding: 12px;
-        border-radius: 10px;
-        background: #fff8f8;
-        border: 1px solid #ffecee;
-      }
-      .breakdown {
-        margin-top: 8px;
-      }
-      .line {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-        border-bottom: 1px dashed #f1eaea;
-      }
-      .line:last-child {
-        border-bottom: 0;
-      }
-      .total {
-        font-weight: 700;
-        font-size: 18px;
-        margin-top: 10px;
-      }
-      footer {
-        margin-top: 18px;
-        color: var(--muted);
-        font-size: 13px;
-      }
-      @media (max-width: 720px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Template Pembelian Daging Harian @ANDI</h1>
-      <p class="lead">
-        Masukkan harga per kilo (Rp/kg) dan jumlah kilo yang dibeli. Sistem akan
-        menghitung otomatis sesuai harga x kilo.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3 style="margin: 0 0 8px">Harga per kilo</h3>
-          <label for="harga_daging">Harga daging (Rp / kg)</label>
-          <input
-            id="harga_daging"
-            type="number"
-            min="0"
-            step="100"
-            value="45000"
-          />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nota Daging Harian — @ANDI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0f0c0a;
+      --surface:   #1a1511;
+      --card:      #221c16;
+      --border:    #332a20;
+      --red:       #e8472f;
+      --amber:     #f5a623;
+      --teal:      #2dd4bf;
+      --text:      #f0e8df;
+      --muted:     #7a6a5a;
+      --label:     #b09880;
+      --font-head: 'Bebas Neue', cursive;
+      --font-body: 'DM Sans', sans-serif;
+    }
 
-          <label for="harga_hati" style="margin-top: 8px"
-            >Harga hati (Rp / kg)</label
-          >
-          <input
-            id="harga_hati"
-            type="number"
-            min="0"
-            step="100"
-            value="20000"
-          />
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-          <label for="harga_usus" style="margin-top: 8px"
-            >Harga usus (Rp / kg)</label
-          >
-          <input
-            id="harga_usus"
-            type="number"
-            min="0"
-            step="100"
-            value="15000"
-          />
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 28px 16px 60px;
+    }
 
-          <label for="harga_kepala" style="margin-top: 8px"
-            >Harga kepala & cakar (Rp / kg)</label
-          >
-          <input
-            id="harga_kepala"
-            type="number"
-            min="0"
-            step="100"
-            value="15000"
-          />
-        </div>
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
 
-        <div class="card">
-          <h3 style="margin: 0 0 8px">Jumlah kilo dibeli</h3>
-          <label for="qty_daging">Jumlah daging (kg)</label>
-          <input id="qty_daging" type="number" min="0" step="0.01" value="" />
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
-          <label for="qty_hati" style="margin-top: 8px">Jumlah hati (kg)</label>
-          <input id="qty_hati" type="number" min="0" step="0.01" value="" />
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left {}
+    .brand {
+      font-family: var(--font-head);
+      font-size: clamp(36px, 8vw, 60px);
+      letter-spacing: 3px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--amber) 0%, var(--red) 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .badge {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--amber);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge span {
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--teal);
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: blink 2s ease-in-out infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%,100%{ opacity:1; } 50%{ opacity:0.2; }
+    }
 
-          <label for="qty_usus" style="margin-top: 8px">Jumlah usus (kg)</label>
-          <input id="qty_usus" type="number" min="0" step="0.01" value="" />
+    /* ── Main grid ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    @media(max-width:600px){ .main-grid{ grid-template-columns:1fr; } }
 
-          <label for="qty_kepala" style="margin-top: 8px"
-            >Jumlah kepala & cakar (kg)</label
-          >
-          <input id="qty_kepala" type="number" min="0" step="0.01" value="" />
-          <label for="kekurangan" style="margin-top: 8px"
-            >Kekurangan (x1000)</label
-          >
-          <input id="kekurangan" type="number" min="0" step="1" value="" />
-        </div>
-      </div>
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content:'';
+      position:absolute;
+      top:-40px; right:-40px;
+      width:120px; height:120px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(232,71,47,.08) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .card-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: var(--label);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title svg { flex-shrink:0; }
 
-      <div style="margin-top: 12px" class="card">
-        <p style="margin: 6px 0 0; color: var(--muted); font-size: 13px">
-          Iuran Arisan harian Rp 200.000 (tetap)
-        </p>
-        <div class="actions">
-          <button id="hitung">Hitung Total</button>
-          <button id="reset" class="secondary" type="button">Reset</button>
-          <button id="download" class="secondary" type="button">
-            Unduh Nota
-          </button>
-        </div>
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
 
-        <div
-          id="result"
-          class="result"
-          aria-live="polite"
-          style="display: none"
-        >
-          <div id="breakdown" class="breakdown"></div>
-          <div class="total" id="totalRp"></div>
-        </div>
-      </div>
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
 
-      <footer>
-        Template sederhana untuk menghitung pembelian daging harian sesuai harga
-        per kilo x jumlah kilo.
-      </footer>
+    input[type="number"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      color: var(--text);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none; }
+    input[type="number"]:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245,166,35,.12);
+    }
+
+    /* harga inputs highlight */
+    .harga input[type="number"] { color: var(--amber); }
+
+    /* ── Footer card (arisan + actions) ── */
+    .footer-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+    .arisan-badge {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .arisan-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(245,166,35,.12);
+      border: 1px solid rgba(245,166,35,.25);
+      display: grid; place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .arisan-text small { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+    .arisan-text strong { display:block; font-size:16px; color: var(--amber); }
+
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+    button {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .5px;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: filter .15s, transform .1s;
+    }
+    button:hover { filter: brightness(1.12); }
+    button:active { transform: scale(.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--amber), var(--red)); color:#fff; }
+    .btn-reset   { background: var(--surface); color: var(--label); border: 1px solid var(--border); }
+    .btn-dl      { background: var(--teal); color: #0f0c0a; }
+
+    /* ── Result panel ── */
+    .result-panel {
+      margin-top: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: none;
+      animation: slideIn .3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .result-header {
+      padding: 14px 18px;
+      background: linear-gradient(90deg, rgba(232,71,47,.15), transparent);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-head);
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--red);
+    }
+    .breakdown { padding: 0 18px; }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      gap: 8px;
+    }
+    .line:last-child { border-bottom: 0; }
+    .line-label { font-size: 13px; color: var(--label); }
+    .line-val { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .line-val.zero { color: var(--muted); }
+
+    .total-row {
+      padding: 16px 18px;
+      background: linear-gradient(90deg, rgba(245,166,35,.08), transparent);
+      border-top: 1px solid rgba(245,166,35,.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .total-label { font-family: var(--font-head); font-size: 20px; letter-spacing: 2px; color: var(--label); }
+    .total-val { font-family: var(--font-head); font-size: 28px; letter-spacing: 2px; color: var(--amber); }
+
+    /* ── Saved indicator ── */
+    .saved-toast {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      background: var(--teal);
+      color: #0f0c0a;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .3s, transform .3s;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .saved-toast.show { opacity:1; transform:translateY(0); }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="brand">NOTA DAGING</div>
+      <div class="subtitle">Template Pembelian Harian · @ANDI</div>
     </div>
-    <script>
-      const el = (id) => document.getElementById(id);
-      const formatRp = (num) => {
-        const v = Number(num) || 0;
-        return "Rp " + v.toLocaleString("id-ID");
-      };
+    <div class="badge"><span></span>Harga Tersimpan</div>
+  </div>
 
-      function calculate() {
-        const harga_daging = parseFloat(el("harga_daging").value) || 0;
-        const harga_hati = parseFloat(el("harga_hati").value) || 0;
-        const harga_usus = parseFloat(el("harga_usus").value) || 0;
-        const harga_kepala = parseFloat(el("harga_kepala").value) || 0;
+  <!-- Grid: Harga & Qty -->
+  <div class="main-grid">
 
-        const qty_daging = parseFloat(el("qty_daging").value) || 0;
-        const qty_hati = parseFloat(el("qty_hati").value) || 0;
-        const qty_usus = parseFloat(el("qty_usus").value) || 0;
-        const qty_kepala = parseFloat(el("qty_kepala").value) || 0;
-        const kekurangan = (parseFloat(el("kekurangan").value) || 0) * 1000;
+    <!-- Harga -->
+    <div class="card harga">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M7 7h.01M7 3H5a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm10 0h-2a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2ZM7 13H5a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2Zm10 0h-2a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Harga / Kilo
+      </div>
+      <div class="field">
+        <label>🥩 Daging (Rp/kg)</label>
+        <input id="harga_daging" type="number" min="0" step="100" value="45000" />
+      </div>
+      <div class="field">
+        <label>🫀 Hati (Rp/kg)</label>
+        <input id="harga_hati" type="number" min="0" step="100" value="20000" />
+      </div>
+      <div class="field">
+        <label>🌀 Usus (Rp/kg)</label>
+        <input id="harga_usus" type="number" min="0" step="100" value="15000" />
+      </div>
+      <div class="field">
+        <label>🐔 Kepala &amp; Cakar (Rp/kg)</label>
+        <input id="harga_kepala" type="number" min="0" step="100" value="15000" />
+      </div>
+    </div>
 
-        const subtotal_daging = harga_daging * qty_daging;
-        const subtotal_hati = harga_hati * qty_hati;
-        const subtotal_usus = harga_usus * qty_usus;
-        const subtotal_kepala = harga_kepala * qty_kepala;
-        const subtotal_arisan = 200000; // tetap 200 ribu
+    <!-- Jumlah -->
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Jumlah Beli
+      </div>
+      <div class="field">
+        <label>🥩 Daging (kg)</label>
+        <input id="qty_daging" type="number" min="0" step="0.01" placeholder="0" />
+      </div>
+      <div class="field">
+        <label>🫀 Hati (kg)</label>
+        <input id="qty_hati" type="number" min="0" step="0.01" placeholder="0" />
+      </div>
+      <div class="field">
+        <label>🌀 Usus (kg)</label>
+        <input id="qty_usus" type="number" min="0" step="0.01" placeholder="0" />
+      </div>
+      <div class="field">
+        <label>🐔 Kepala &amp; Cakar (kg)</label>
+        <input id="qty_kepala" type="number" min="0" step="0.01" placeholder="0" />
+      </div>
+      <div class="field">
+        <label>💰 Kekurangan (×1000)</label>
+        <input id="kekurangan" type="number" min="0" step="1" placeholder="0" />
+      </div>
+    </div>
 
-        const total =
-          subtotal_daging +
-          subtotal_hati +
-          subtotal_usus +
-          subtotal_kepala +
-          subtotal_arisan +
-          kekurangan;
+  </div>
 
-        const breakdown = [
-          {
-            label: `Daging (${qty_daging} kg x Rp ${harga_daging}/kg)`,
-            value: subtotal_daging,
-          },
-          {
-            label: `Hati (${qty_hati} kg x Rp ${harga_hati}/kg)`,
-            value: subtotal_hati,
-          },
-          {
-            label: `Usus (${qty_usus} kg x Rp ${harga_usus}/kg)`,
-            value: subtotal_usus,
-          },
-          {
-            label: `Kepala & Cakar (${qty_kepala} kg x Rp ${harga_kepala}/kg)`,
-            value: subtotal_kepala,
-          },
-          { label: `Iuran Arisan (Rp 200.000 tetap)`, value: subtotal_arisan },
-          { label: `Kekurangan (x1000)`, value: kekurangan },
-        ];
+  <!-- Footer card -->
+  <div class="footer-card">
+    <div class="arisan-badge">
+      <div class="arisan-icon">🪙</div>
+      <div class="arisan-text">
+        <small>Iuran Arisan Harian</small>
+        <strong>Rp 200.000 (tetap)</strong>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="hitung">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3v-6m-6 6h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Hitung Total
+      </button>
+      <button class="btn-reset" id="reset">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15-4.5M20 15a9 9 0 0 1-15 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Reset
+      </button>
+      <button class="btn-dl" id="download">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 10l5 5 5-5M12 4v11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Unduh Nota
+      </button>
+    </div>
+  </div>
 
-        const bd = el("breakdown");
-        bd.innerHTML = "";
-        breakdown.forEach((item) => {
-          const div = document.createElement("div");
-          div.className = "line";
-          div.innerHTML = `<div style="color:var(--muted);font-size:13px">${
-            item.label
-          }</div><div>${formatRp(item.value)}</div>`;
-          bd.appendChild(div);
-        });
+  <!-- Result -->
+  <div id="result" class="result-panel" aria-live="polite">
+    <div class="result-header">📋 RINCIAN PEMBELIAN</div>
+    <div id="breakdown" class="breakdown"></div>
+    <div class="total-row">
+      <div class="total-label">TOTAL</div>
+      <div class="total-val" id="totalRp"></div>
+    </div>
+  </div>
 
-        el("totalRp").textContent = `TOTAL: ${formatRp(total)}`;
-        el("result").style.display = "block";
+  <footer>Template Nota Daging · Harga disimpan otomatis di browser</footer>
+</div>
 
-        return { breakdown, total };
-      }
+<!-- Toast -->
+<div class="saved-toast" id="toast">✓ Harga disimpan</div>
 
-      el("hitung").addEventListener("click", () => {
-        calculate();
+<script>
+  const el = id => document.getElementById(id);
+  const formatRp = n => "Rp " + (Number(n)||0).toLocaleString("id-ID");
+
+  // ── LocalStorage ──
+  const STORAGE_KEY = "nota_daging_harga_v1";
+  const HARGA_IDS = ["harga_daging","harga_hati","harga_usus","harga_kepala"];
+
+  function saveHarga() {
+    const data = {};
+    HARGA_IDS.forEach(id => data[id] = el(id).value);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showToast();
+  }
+
+  function loadHarga() {
+    try {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!data) return;
+      HARGA_IDS.forEach(id => {
+        if (data[id] !== undefined) el(id).value = data[id];
       });
+    } catch(e) {}
+  }
 
-      el("reset").addEventListener("click", () => {
-        document.querySelectorAll("input").forEach((i) => {
-          if (i.type === "number") {
-          }
-        });
-        el("result").style.display = "none";
-      });
+  let toastTimer;
+  function showToast() {
+    const t = el("toast");
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+  }
 
-      el("download").addEventListener("click", () => {
-        const res = calculate();
-        const lines = [];
+  // ── Calculate ──
+  function calculate() {
+    const harga_daging = parseFloat(el("harga_daging").value) || 0;
+    const harga_hati   = parseFloat(el("harga_hati").value)   || 0;
+    const harga_usus   = parseFloat(el("harga_usus").value)   || 0;
+    const harga_kepala = parseFloat(el("harga_kepala").value) || 0;
+    const qty_daging   = parseFloat(el("qty_daging").value)   || 0;
+    const qty_hati     = parseFloat(el("qty_hati").value)     || 0;
+    const qty_usus     = parseFloat(el("qty_usus").value)     || 0;
+    const qty_kepala   = parseFloat(el("qty_kepala").value)   || 0;
+    const kekurangan   = (parseFloat(el("kekurangan").value)  || 0) * 1000;
 
-        // Header nota
-        lines.push("=".repeat(40));
-        lines.push("       🧾 NOTA PEMBELIAN DAGING HARIAN");
-        lines.push("=".repeat(40));
-        lines.push("");
+    const sub_daging  = harga_daging * qty_daging;
+    const sub_hati    = harga_hati   * qty_hati;
+    const sub_usus    = harga_usus   * qty_usus;
+    const sub_kepala  = harga_kepala * qty_kepala;
+    const sub_arisan  = 200000;
 
-        // Isi breakdown
-        res.breakdown.forEach((b) => {
-          const label = b.label.replace(/\(x1000\)/g, "").trim();
-          const val = formatRp(b.value).padStart(15);
-          lines.push(label.padEnd(40 - val.length, ".") + val);
-        });
+    const total = sub_daging + sub_hati + sub_usus + sub_kepala + sub_arisan + kekurangan;
 
-        lines.push("-".repeat(40));
-        lines.push(`TOTAL`.padEnd(25, " ") + formatRp(res.total).padStart(15));
-        lines.push("=".repeat(40));
-        lines.push(`Tanggal: ${new Date().toLocaleDateString("id-ID")}`);
-        lines.push("Terima kasih sudah bertransaksi 🤝");
-        lines.push("=".repeat(40));
+    const items = [
+      { emoji:"🥩", label:`Daging`, detail:`${qty_daging} kg × Rp ${harga_daging.toLocaleString("id-ID")}`, value: sub_daging },
+      { emoji:"🫀", label:`Hati`,   detail:`${qty_hati} kg × Rp ${harga_hati.toLocaleString("id-ID")}`,     value: sub_hati   },
+      { emoji:"🌀", label:`Usus`,   detail:`${qty_usus} kg × Rp ${harga_usus.toLocaleString("id-ID")}`,     value: sub_usus   },
+      { emoji:"🐔", label:`Kepala & Cakar`, detail:`${qty_kepala} kg × Rp ${harga_kepala.toLocaleString("id-ID")}`, value: sub_kepala },
+      { emoji:"🪙", label:`Iuran Arisan`,   detail:`Tetap`,                                                  value: sub_arisan },
+      { emoji:"💰", label:`Kekurangan`,     detail:`×1000`,                                                  value: kekurangan },
+    ];
 
-        // Download file
-        const blob = new Blob([lines.join("\n")], {
-          type: "text/plain;charset=utf-8",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `nota-pembelian-daging-${new Date()
-          .toISOString()
-          .slice(0, 10)}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      });
+    const bd = el("breakdown");
+    bd.innerHTML = "";
+    items.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "line";
+      div.innerHTML = `
+        <div class="line-label">${item.emoji} <strong style="color:var(--text);margin-right:4px">${item.label}</strong> <span style="color:var(--muted);font-size:12px">${item.detail}</span></div>
+        <div class="line-val ${item.value === 0 ? 'zero' : ''}">${formatRp(item.value)}</div>
+      `;
+      bd.appendChild(div);
+    });
 
-      document.querySelectorAll("input").forEach((inp) => {
-        inp.addEventListener("input", () => {
-          const any = Array.from(document.querySelectorAll("input")).some(
-            (i) => Number(i.value) !== 0
-          );
-          if (any) calculate();
-        });
-      });
-    </script>
-  </body>
-</html>
+    el("totalRp").textContent = formatRp(total);
+    el("result").style.display = "block";
+
+    return { items, total };
+  }
+
+  // ── Events ──
+  el("hitung").addEventListener("click", calculate);
+
+  el("reset").addEventListener("click", () => {
+    ["qty_daging","qty_hati","qty_usus","qty_kepala","kekurangan"].forEach(id => el(id).value = "");
+    el("result").style.display = "none";
+  });
+
+  el("download").addEventListener("click", () => {
+    const res = calculate();
+    const lines = [];
+    lines.push("=".repeat(44));
+    lines.push("        🧾 NOTA PEMBELIAN DAGING HARIAN");
+    lines.push(`        Template by @ANDI`);
+    lines.push("=".repeat(44));
+    lines.push("");
+    res.items.forEach(b => {
+      const label = `${b.emoji} ${b.label}`;
+      const val = formatRp(b.value);
+      lines.push(label.padEnd(44 - val.length, ".") + val);
+    });
+    lines.push("-".repeat(44));
+    const totalStr = formatRp(res.total);
+    lines.push("TOTAL".padEnd(44 - totalStr.length, " ") + totalStr);
+    lines.push("=".repeat(44));
+    lines.push(`Tanggal: ${new Date().toLocaleDateString("id-ID", {weekday:"long",year:"numeric",month:"long",day:"numeric"})}`);
+    lines.push("Terima kasih sudah bertransaksi 🤝");
+    lines.push("=".repeat(44));
+
+    const blob = new Blob([lines.join("\n")], { type:"text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nota-daging-${new Date().toISOString().slice(0,10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  // Auto-calculate when any qty/kekurangan input changes
+  const qtyInputs = ["qty_daging","qty_hati","qty_usus","qty_kepala","kekurangan"];
+  qtyInputs.forEach(id => {
+    el(id).addEventListener("input", () => {
+      const any = qtyInputs.some(i => parseFloat(el(i).value) > 0);
+      if (any) calculate();
+    });
+  });
+
+  // Save harga to localStorage on change (debounced)
+  let saveTimer;
+  HARGA_IDS.forEach(id => {
+    el(id).addEventListener("input", () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveHarga, 600);
+      const any = qtyInputs.some(i => parseFloat(el(i).value) > 0);
+      if (any) calculate();
+    });
+  });
+
+  // ── Init: load saved harga ──
+  loadHarga();
+</script>
+</body>
+                                                                      </html>
+
